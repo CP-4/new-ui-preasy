@@ -8,7 +8,7 @@ export default {
   created() {
     this.$store.dispatch('logoutUser');
     this.$router.push({
-      name: 'Login'
+      name: 'login'
     });
   }
 }

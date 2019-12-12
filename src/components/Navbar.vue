@@ -3,7 +3,7 @@
   <nav>
 
     <v-app-bar dense flat app class="grey lighten-4">
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer"  class="grey--text"/>
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer" class="grey--text" />
       <v-toolbar-title class="text-uppercase grey--text">
         <span class="font-weight-light">pr</span>
         <span>easy</span>
@@ -29,6 +29,14 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
+      <template v-slot:append>
+        <div class="pa-2">
+          <v-btn block to="logout">
+            Logout
+            <v-icon right>mdi-logout-variant</v-icon>
+          </v-btn>
+        </div>
+      </template>
     </v-navigation-drawer>
 
 

@@ -1,30 +1,5 @@
 <template>
 <div class="home">
-  <!-- <v-navigation-drawer v-model="drawer" app color="">
-    <v-list dense>
-      <v-list-item link>
-        <v-list-item-action>
-          <v-icon>mdi-home</v-icon>
-        </v-list-item-action>
-        <v-list-item-content>
-          <v-list-item-title>Home</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
-      <v-list-item link>
-        <v-list-item-action>
-          <v-icon>mdi-contact-mail</v-icon>
-        </v-list-item-action>
-        <v-list-item-content>
-          <v-list-item-title>Contact</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
-    </v-list>
-  </v-navigation-drawer>
-
-  <v-app-bar flat app class="grey lighten-4">
-    <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-    <v-toolbar-title>Preasy</v-toolbar-title>
-  </v-app-bar> -->
 
   <v-tabs fixed-tabs v-model="v_tabs" background-color="grey lighten-4">
     <v-tab v-on:click="setMyPrintTray()">
@@ -212,10 +187,18 @@ export default {
     getFiles() {
 
       axiosBase.get('/file2/files/', {
-        headers: {
-          'Authorization': "bearer " + this.$store.state.accessToken
-        },
-      }).then(response => this.files = response.data);
+          headers: {
+            'Authorization': "bearer " + this.$store.state.accessToken
+          },
+        })
+        .then(response => this.files = response.data)
+        .catch(err => {
+          if (err.response.status === 401) {
+            this.$router.push({
+              name: 'logout'
+            })
+          }
+        });
     },
 
     removeFile(file_id) {
@@ -224,7 +207,14 @@ export default {
           headers: {
             'Authorization': "bearer " + this.$store.state.accessToken
           },
-        }).then(() => this.getFiles());
+        }).then(() => this.getFiles())
+        .catch(err => {
+          if (err.response.status === 401) {
+            this.$router.push({
+              name: 'logout'
+            })
+          }
+        });
       }
     },
 
@@ -278,7 +268,9 @@ export default {
           })
           .then(() => this.getFiles())
           .catch(err => {
-            if (err.status === 401) {
+            // alert(err.response.status)
+            // console.log(err);
+            if (err.response.status === 401) {
               this.$router.push({
                 name: 'logout'
               })
@@ -294,7 +286,14 @@ export default {
         headers: {
           'Authorization': "bearer " + this.$store.state.accessToken
         },
-      }).then(() => this.setMyPickUp());
+      }).then(() => this.setMyPickUp())
+      .catch(err => {
+        if (err.response.status === 401) {
+          this.$router.push({
+            name: 'logout'
+          })
+        }
+      });
 
       this.showPlaceOrder = false;
       this.v_tabs = 1;
@@ -328,18 +327,25 @@ export default {
           headers: {
             'Authorization': "bearer " + this.$store.state.accessToken
           },
-        }).then(() => this.getFiles());
+        }).then(() => this.getFiles())
+        .catch(err => {
+          if (err.response.status === 401) {
+            this.$router.push({
+              name: 'logout'
+            })
+          }
+        });
       }
     },
 
     setMyPrintTray() {
-      // this.getFiles();
+      this.getFiles();
       this.active_tab = "my_print_tray";
       this.action_button_text = "Print Files"
     },
 
     setMyPickUp() {
-      // this.getFiles();
+      this.getFiles();
       this.active_tab = "my_pick_up";
       this.action_button_text = "Here to Pick-Up"
     },
