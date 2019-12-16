@@ -61,6 +61,11 @@ export default {
       wrongCred: false // activates appropriate message if set to true
     }
   },
+
+  mounted() {
+    this.$store.dispatch('urlanalyticsTrigger', 'login page mounted')
+  },
+
   methods: {
     loginUser() { // call loginUser action
       this.$store.dispatch('loginUser', {

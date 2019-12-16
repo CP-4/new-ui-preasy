@@ -118,6 +118,9 @@
           <p>{{ printTray.length }} files will be printed.</p>
         </div>
         <br>
+
+        <v-text-field v-model="promo_code" label="Promo code" placeholder="SAVE10" filled></v-text-field>
+
         <div class="is-size-7 text-center">
           <p class="ma-n1">Pay at the shop. No extra charges.</p>
           <p class="red--text accent-3">Orders once placed cannot be cancelled.</p>
@@ -165,7 +168,8 @@ export default {
       active_tab: "my_print_tray",
       showPlaceOrder: false,
       v_tabs: 0,
-      print_feature_items: ["Single side", "Both side"]
+      print_feature_items: ["Single side", "Both side"],
+      promo_code: ''
     }
   },
 
@@ -181,6 +185,7 @@ export default {
 
   mounted() {
     this.getFiles();
+    this.$store.dispatch('urlanalyticsTrigger', 'print home mounted')
   },
 
   methods: {
@@ -204,17 +209,17 @@ export default {
     removeFile(file_id) {
       if (this.active_tab === 'my_print_tray') {
         axiosBase.delete('/file2/files/' + file_id, {
-          headers: {
-            'Authorization': "bearer " + this.$store.state.accessToken
-          },
-        }).then(() => this.getFiles())
-        .catch(err => {
-          if (err.response.status === 401) {
-            this.$router.push({
-              name: 'logout'
-            })
-          }
-        });
+            headers: {
+              'Authorization': "bearer " + this.$store.state.accessToken
+            },
+          }).then(() => this.getFiles())
+          .catch(err => {
+            if (err.response.status === 401) {
+              this.$router.push({
+                name: 'logout'
+              })
+            }
+          });
       }
     },
 
@@ -276,24 +281,28 @@ export default {
               })
             }
           });
-
         document.getElementById('fileupload').value = "";
       }
+      this.$store.dispatch('urlanalyticsTrigger', 'add file')
     },
 
     placeOrder() {
-      axiosBase.put('/file2/files/printmytray', this.printTray, {
-        headers: {
-          'Authorization': "bearer " + this.$store.state.accessToken
-        },
-      }).then(() => this.setMyPickUp())
-      .catch(err => {
-        if (err.response.status === 401) {
-          this.$router.push({
-            name: 'logout'
-          })
-        }
-      });
+      this.$store.dispatch('urlanalyticsTrigger', 'order placed')
+      axiosBase.put('/file2/files/printmytray', {
+          print_tray: this.printTray,
+          promo_code: this.promo_code
+        }, {
+          headers: {
+            'Authorization': "bearer " + this.$store.state.accessToken
+          },
+        }).then(() => this.setMyPickUp())
+        .catch(err => {
+          if (err.response.status === 401) {
+            this.$router.push({
+              name: 'logout'
+            })
+          }
+        });
 
       this.showPlaceOrder = false;
       this.v_tabs = 1;
@@ -315,7 +324,11 @@ export default {
 
         this.printTray = printTray;
 
+        this.$store.dispatch('urlanalyticsTrigger', 'print files')
+
       } else if (this.active_tab === 'my_pick_up') {
+
+        this.$store.dispatch('urlanalyticsTrigger', 'here to pickup')
         // console.log('im here to pick up');
         let pickUp = this.files.filter(function(file) {
           return file.printJobStatus == 2;
@@ -324,17 +337,17 @@ export default {
         let pickUpIds = pickUp.map(a => a.id);
 
         axiosBase.put('/file2/files/pickup', pickUpIds, {
-          headers: {
-            'Authorization': "bearer " + this.$store.state.accessToken
-          },
-        }).then(() => this.getFiles())
-        .catch(err => {
-          if (err.response.status === 401) {
-            this.$router.push({
-              name: 'logout'
-            })
-          }
-        });
+            headers: {
+              'Authorization': "bearer " + this.$store.state.accessToken
+            },
+          }).then(() => this.getFiles())
+          .catch(err => {
+            if (err.response.status === 401) {
+              this.$router.push({
+                name: 'logout'
+              })
+            }
+          });
       }
     },
 

@@ -57,6 +57,11 @@ export default {
       wrongCred: false // activates appropriate message if set to true
     }
   },
+
+  mounted() {
+    this.$store.dispatch('urlanalyticsTrigger', 'register page mounted')
+  },
+
   methods: {
     registerUser() { // call registerUser action
       this.$store.dispatch('registerUser', {

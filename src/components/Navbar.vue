@@ -12,7 +12,7 @@
 
     <v-navigation-drawer v-model="drawer" app dark color="#9652ff">
       <v-list dense>
-        <v-list-item link>
+        <v-list-item link to="/">
           <v-list-item-action>
             <v-icon>mdi-cloud-print-outline</v-icon>
           </v-list-item-action>
@@ -20,12 +20,12 @@
             <v-list-item-title>Print Home</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item link>
+        <v-list-item link to="bucket">
           <v-list-item-action>
             <v-icon>mdi-file</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Assignments</v-list-item-title>
+            <v-list-item-title>File Bucket</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -50,7 +50,7 @@ export default {
     return {
       drawer: false,
     }
-  }
+  },
 }
 </script>
 

@@ -22,5 +22,9 @@ export default {
   data: () => ({
     //
   }),
+
+  mounted() {
+    this.$store.dispatch('urlanalyticsLinkOpen', 'App loaded')
+  }
 };
 </script>
