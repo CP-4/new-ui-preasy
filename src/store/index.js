@@ -14,6 +14,7 @@ export default new Vuex.Store({
     APIData: '',
     tempUserId: localStorage.getItem('temp_user_id') || null,
     studentProfile: localStorage.getItem('student_profile') || null,
+    promoCode: localStorage.getItem('promo_code') || null,
   },
 
   getters: {
@@ -23,6 +24,10 @@ export default new Vuex.Store({
 
     isSetStudentProfile(state) {
       return state.studentProfile != null
+    },
+
+    getPromoCode(state) {
+      return state.promoCode;
     }
   },
 
@@ -45,12 +50,23 @@ export default new Vuex.Store({
     setStudentProfile(state) {
       localStorage.setItem('student_profile', 'updated');
       state.studentProfile = 'updated';
+    },
+
+    destroyStudentProfile(state) {
+      localStorage.removeItem('student_profile');
+      state.studentProfile = null;
+    },
+
+    setPromoCode(state, promoCode) {
+      localStorage.setItem('promo_code', promoCode);
+      state.promoCode = promoCode;
     }
   },
 
   actions: {
     logoutUser(context) {
       context.commit('destroyToken')
+      context.commit('destroyStudentProfile')
     },
 
     loginUser(context, credentials) {
@@ -94,7 +110,7 @@ export default new Vuex.Store({
       var tempUserId;
       if (this.state.tempUserId == null) {
         // console.log("new tui");
-        tempUserId = Math.floor((Math.random() * 1000) + 1);
+        tempUserId = Math.floor((Math.random() * 10000) + 1);
         context.commit('setTempUserId', tempUserId)
       } else {
         // console.log("old tui");
@@ -155,6 +171,12 @@ export default new Vuex.Store({
         }
       })
       .catch(error => console.log(error))
+    },
+
+    updatePrmoCode(context, payload) {
+      console.log(payload);
+      context.commit('setPromoCode', payload)
+
     },
 
   },

@@ -9,7 +9,13 @@ import Filebucket from '@/views/Filebucket'
 
 Vue.use(VueRouter)
 
-const routes = [{
+const routes = [
+  {
+     path: '/promo/:promoCode',
+     name: 'promo',
+     component: require('@/components/Promo').default
+  },
+  {
     path: '/bucket',
     name: 'filebucket',
     component: Filebucket,

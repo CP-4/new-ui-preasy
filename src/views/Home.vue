@@ -116,11 +116,23 @@
         <!-- <br> -->
         <div class="title is-5 has-text-left">
           <p>{{ printTray.length }} files will be printed.</p>
+
+          <p></p>
         </div>
         <br>
 
-        <v-text-field v-model="promo_code" label="Promo code" placeholder="SAVE10" filled></v-text-field>
+        <!-- <v-text-field v-model="promo_code" label="Promo code" placeholder="SAVE10" filled></v-text-field> -->
 
+        <div class="column" v-if="promo_code">
+          <div class="caption grey--text">Promo code:</div>
+          <span>{{ promo_code }}</span>
+        </div>
+
+        <div class="is-size-6 column">
+          <div class="caption grey--text">Shop:</div>
+          <span>Shivam Xerox, opp. Civil department</span>
+        </div>
+        <br>
         <div class="is-size-7 text-center">
           <p class="ma-n1">Pay at the shop. No extra charges.</p>
           <p class="red--text accent-3">Orders once placed cannot be cancelled.</p>
@@ -180,15 +192,21 @@ export default {
 
     isActiveMyPickUp: function() {
       return this.active_tab === 'my_pick_up';
-    }
+    },
+
   },
 
   mounted() {
     this.getFiles();
-    this.$store.dispatch('urlanalyticsTrigger', 'print home mounted')
+    this.$store.dispatch('urlanalyticsTrigger', 'print home mounted');
+    this.setPropPromoCode();
   },
 
   methods: {
+    setPropPromoCode() {
+      this.promo_code = this.$store.getters.getPromoCode;
+    },
+
     getFiles() {
 
       axiosBase.get('/file2/files/', {

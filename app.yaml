@@ -1,7 +1,6 @@
 runtime: nodejs12
 
-# service: webapp
-service: dev
+# service: dev
 
 handlers:
   # Serve all static files with urls ending with a file extension

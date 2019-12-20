@@ -3,7 +3,7 @@
   <nav>
 
     <v-app-bar dense flat app class="grey lighten-4">
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer" class="grey--text" />
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer" class="grey--text" v-if="this.$store.getters.loggedIn"/>
       <v-toolbar-title class="text-uppercase grey--text">
         <span class="font-weight-light">pr</span>
         <span>easy</span>
