@@ -21,6 +21,10 @@
               <div class="caption grey--text">File name</div>
               <span>{{ file.docname.slice(0,20) }}</span>
             </div>
+            <div class="column">
+              <div class="caption grey--text">File ID</div>
+              <span>{{ file.id }}</span>
+            </div>
           </div>
         </div>
         <div class="level-right">
@@ -151,6 +155,56 @@
     </div>
   </div>
 
+  <div class="modal is-active" v-if="showPickUp">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+      <div class="box">
+        <div class="level is-mobile">
+          <v-spacer></v-spacer>
+          <div class="title is-2 text-center">
+            <p class="">Pick Up</p>
+          </div>
+          <v-spacer></v-spacer>
+          <v-btn class="mt-n10" fab depressed small v-on:click="showPickUp = !showPickUp">
+            <v-icon>mdi-close-circle</v-icon>
+          </v-btn>
+        </div>
+        <!-- <br> -->
+        <div class="title is-5 has-text-left">
+          <p>{{ pickUpTray.length }} files are printed. Pick up these files?</p>
+
+          <p></p>
+        </div>
+        <br>
+
+        <div class="is-size-6 column">
+          <div class="caption grey--text">Shop:</div>
+          <span>Shivam Xerox, opp. Civil department</span>
+        </div>
+        <br>
+        <div class="is-size-7 text-center">
+          <p class="ma-n1">Pay at the shop. No extra charges.</p>
+          <p class="red--text accent-3">Orders once placed cannot be cancelled.</p>
+        </div>
+        <div class="">
+          <div class="level is-mobile">
+            <v-btn class="" x-large block dark color="red accent-2" v-on:click="pickUpOrder()">
+              <span class="">Pick Up</span>
+            </v-btn>
+          </div>
+
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+  <v-snackbar v-model="showSnackbar">
+      {{ textSanckbar }}
+      <v-btn color="pink" text @click="showSnackbar = false">
+        Ok
+      </v-btn>
+    </v-snackbar>
 </div>
 </template>
 
@@ -175,13 +229,17 @@ export default {
       drawer: false,
       files: [],
       printTray: [],
+      pickUpTray: [],
       showNav: true,
       action_button_text: "Print Files",
       active_tab: "my_print_tray",
       showPlaceOrder: false,
+      showPickUp: false,
+      showSnackbar: false,
       v_tabs: 0,
       print_feature_items: ["Single side", "Both side"],
-      promo_code: ''
+      promo_code: '',
+      textSanckbar: '',
     }
   },
 
@@ -326,8 +384,24 @@ export default {
       this.v_tabs = 1;
     },
 
-    openPlaceOrder() {
-      this.showPlaceOrder = true;
+    pickUpOrder() {
+      this.$store.dispatch('urlanalyticsTrigger', 'pickup placed')
+      let pickUpIds = this.pickUpTray.map(a => a.id);
+
+      axiosBase.put('/file2/files/pickup', pickUpIds, {
+          headers: {
+            'Authorization': "bearer " + this.$store.state.accessToken
+          },
+        }).then(() => this.getFiles())
+        .catch(err => {
+          if (err.response.status === 401) {
+            this.$router.push({
+              name: 'logout'
+            })
+          }
+        });
+        
+        this.showPickUp = false;
     },
 
     actionButton() {
@@ -337,35 +411,35 @@ export default {
         let printTray = this.files.filter(function(file) {
           return file.printJobStatus == 0;
         })
-        this.openPlaceOrder();
-        // console.log('send print tray')
-
         this.printTray = printTray;
 
+        if (printTray.length > 0) {
+          this.showPlaceOrder = true;
+        } else {
+          this.textSanckbar = "Add file is empty.";
+          this.showSnackbar = true;
+        }
+        // console.log('send print tray')
+
         this.$store.dispatch('urlanalyticsTrigger', 'print files')
+
 
       } else if (this.active_tab === 'my_pick_up') {
 
         this.$store.dispatch('urlanalyticsTrigger', 'here to pickup')
-        // console.log('im here to pick up');
+
         let pickUp = this.files.filter(function(file) {
           return file.printJobStatus == 2;
         })
+        this.pickUpTray = pickUp;
 
-        let pickUpIds = pickUp.map(a => a.id);
+        if (pickUp.length > 0) {
+          this.showPickUp = true;
+        } else {
+          this.textSanckbar = "No file ready for pick up. ";
+          this.showSnackbar = true;
+        }
 
-        axiosBase.put('/file2/files/pickup', pickUpIds, {
-            headers: {
-              'Authorization': "bearer " + this.$store.state.accessToken
-            },
-          }).then(() => this.getFiles())
-          .catch(err => {
-            if (err.response.status === 401) {
-              this.$router.push({
-                name: 'logout'
-              })
-            }
-          });
       }
     },
 

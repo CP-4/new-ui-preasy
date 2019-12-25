@@ -92,6 +92,7 @@ export default new Vuex.Store({
         axiosBase.post('/file2/auth/register/', {
             student_name: credentials.student_name,
             email: credentials.email,
+            phone: credentials.phone,
             password: credentials.password
           })
           .then(response => {
@@ -112,15 +113,15 @@ export default new Vuex.Store({
         // console.log("new tui");
         tempUserId = Math.floor((Math.random() * 10000) + 1);
         context.commit('setTempUserId', tempUserId)
+        axiosBase.post('file2/urlanalytics/trigger', {
+          data: "App Mounted",
+          temp_user_id: tempUserId,
+        })
       } else {
         // console.log("old tui");
         tempUserId = this.state.tempUserId
       }
       // console.log(tempUserId);
-      axiosBase.post('file2/urlanalytics/trigger', {
-        data: "Page Mounted",
-        temp_user_id: tempUserId,
-      })
     },
 
     urlanalyticsTrigger(context, payload) {
@@ -159,8 +160,7 @@ export default new Vuex.Store({
       axiosBase.post('file2/profile/update', {
         clg_value: payload.clg_value,
         branch_value: payload.branch_value,
-        year_value: payload.year_value,
-        phone_value: payload.phone_value
+        year_value: payload.year_value
       }, {
         headers: {
           'Authorization': "bearer " + this.state.accessToken

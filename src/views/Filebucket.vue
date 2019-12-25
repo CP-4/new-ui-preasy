@@ -3,10 +3,7 @@
     <v-container class="pt-8 grey lighten-4">
 
       <v-card class="my-n5 px-2" v-if="!this.$store.getters.isSetStudentProfile">
-        <div class="title is-2 text-center">
-          <p>Complete your profile</p>
-        </div>
-        <div class="title is-5">
+        <div class="headline grey--text text--darken-2 py-2">
           Select:
         </div>
         <v-row class="center my-n5">
@@ -36,18 +33,7 @@
           </v-col>
         </v-row>
 
-        <v-row>
-          <v-col cols="12" sm="6" md="3">
-            <v-text-field
-              v-model="phone_value"
-              label="Phone number"
-              placeholder="95121XXXXX"
-              filled
-            ></v-text-field>
-          </v-col>
-        </v-row>
-
-        <v-btn block v-on:click="updateStudenProfile()" dark color="deep-purple accent-3">Save</v-btn>
+        <v-btn block v-on:click="updateStudenProfile()" dark color="deep-purple accent-3">Search</v-btn>
 
         <v-divider></v-divider>
       </v-card>
@@ -60,7 +46,7 @@
 
       <v-card class="pa-2 my-2" v-if="this.$store.getters.isSetStudentProfile">
         <div class="subtitle is-7 text-center">
-          <p class="red--text accent-3">We are collecting files. We will notify you once done!</p>
+          <p class="red--text accent-3">We are collecting files. We will notify you once done! If you wish to help us in collecting these files, or want to submit any file, <a href="mailto:writetopreasy@gmail.com" class="green--text text--accent-4" @click="urlanalyticsTrigger('writetopreasy')">writetopreasy@gmail.com</a></p>
         </div>
       </v-card>
 
@@ -87,14 +73,14 @@ export default {
         // 'other',
       ],
       branch_items: [
-        'CI',
+        'CL',
         'CP',
         'CH',
         'EC',
         'EE',
         'IT',
         'ME',
-        'MH',
+        'MC',
       ],
       year_items: [
         'First',
@@ -105,7 +91,6 @@ export default {
       clg_value: '',
       branch_value: '',
       year_value: '',
-      phone_value: '',
     }
   },
 
@@ -120,7 +105,6 @@ export default {
         clg_value: this.clg_value,
         branch_value: this.branch_value,
         year_value: this.year_value,
-        phone_value: this.phone_value
       })
     },
   }

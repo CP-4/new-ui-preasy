@@ -1,54 +1,37 @@
 <template>
-<section class="hero is-primary is-fullheight grey lighten-4">
-  <div class="hero-body">
-    <div class="container">
-      <div class="columns is-centered">
-        <div class="column is-5-tablet is-4-desktop is-3-widescreen">
-          <form action="" class="box">
-            <div class="field">
-              <label for="" class="label">Email</label>
-              <div class="control has-icons-left">
-                <input type="email" placeholder="e.g. user@example.com" class="input" required v-model="email">
-                <span class="icon is-small is-left">
-                  <i class="fa fa-envelope"></i>
-                </span>
-              </div>
-            </div>
-            <div class="field">
-              <label for="" class="label">Password</label>
-              <div class="control has-icons-left">
-                <input type="password" placeholder="*******" class="input" required v-model="password">
-                <span class="icon is-small is-left">
-                  <i class="fa fa-lock"></i>
-                </span>
-              </div>
-            </div>
-            <div class="">
-              <nav class="level is-mobile">
-                <div class="level-left">
-                  <div class="level-item">
-                    <v-btn dark class="red accent-3" v-on:click="loginUser">
-                      <v-icon left>mdi-login-variant</v-icon>
-                      Login
-                    </v-btn>
-                  </div>
-                </div>
-                <div class="level-right">
-                  <div class="level-item">
-                    <v-btn dark class="green accent-3" v-on:click="registerUser">
-                      <v-icon left>mdi-sign-direction</v-icon>
-                      Register
-                    </v-btn>
-                  </div>
-                </div>
-              </nav>
-            </div>
-          </form>
+  <div class="">
+    <v-container class="px-4" fill-hight align-center>
+      <div class="text-center pt-12 mt-12">
+        <div class="pa-4">
+          <span class="font-weight-light title grey--text text--darken-2">login to </span> <span class="text-uppercase grey--text">
+            <span class="headline font-weight-light">pr</span>
+            <span class="headline">easy</span>
+          </span>
         </div>
       </div>
-    </div>
+      <div class="">
+        <v-text-field v-model="email" label="Email" outlined dense required color="green accent-4"
+        :rules="rules.required"></v-text-field>
+        <v-text-field v-model="password" label="Password" outlined dense required color="green accent-4"
+        :rules="rules.required" type="password"></v-text-field>
+      </div>
+      <div class="text-center pa-6">
+        <p class="grey--text"></p>
+        <v-btn class="green accent-4" large block rounded dark @click="loginUser">Log in</v-btn>
+        <br>
+        <div class="text-center">
+          <v-row align="center">
+            <v-col class="text-center" cols="12">
+              <span class="overline grey--text text--darken-2">Don't have an account?</span>
+              <v-btn class="green--text text--accent-4" text rounded to="register">Sign up</v-btn>
+            </v-col>
+          </v-row>
+
+        </div>
+      </div>
+
+    </v-container>
   </div>
-</section>
 </template>
 
 <script>
@@ -58,7 +41,11 @@ export default {
     return {
       email: '',
       password: '',
-      wrongCred: false // activates appropriate message if set to true
+      wrongCred: false, // activates appropriate message if set to true
+      rules: {
+        required: [val => (val || '').length > 0 || 'This field is required'],
+
+      },
     }
   },
 
@@ -84,11 +71,6 @@ export default {
         })
     },
 
-    registerUser() {
-      this.$router.push({
-        name: 'register'
-      });
-    }
   }
 }
 </script>

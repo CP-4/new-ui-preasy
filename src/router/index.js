@@ -11,6 +11,11 @@ Vue.use(VueRouter)
 
 const routes = [
   {
+    path: '/landing',
+    name: 'landing',
+    component: require('@/views/Landing').default
+  },
+  {
      path: '/promo/:promoCode',
      name: 'promo',
      component: require('@/components/Promo').default
