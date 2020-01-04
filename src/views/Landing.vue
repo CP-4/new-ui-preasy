@@ -2,7 +2,7 @@
   <div class="">
     <v-container>
 
-      <div class="pt-12 mt-12">
+      <div class="pt-12">
         <div class="text-center">
           <div class="headline">
             Stand for things that matter.
@@ -35,7 +35,7 @@
           </v-btn>
         </div>
         <div class="text-center">
-          <p class="overline grey--text text--darken-2">Add power instant-tele-printation to your skill!</p>
+          <p class="overline grey--text text--darken-2">Instant-tele-printation!</p>
         </div>
       </v-col>
     </v-footer>

@@ -103,108 +103,185 @@
     </v-btn>
   </v-footer>
 
-  <div class="modal is-active" v-if="showPlaceOrder">
-    <div class="modal-background"></div>
-    <div class="modal-content">
-      <div class="box">
-        <div class="level is-mobile">
-          <v-spacer></v-spacer>
-          <div class="title is-2 text-center">
-            <p class="">Invoice</p>
-          </div>
-          <v-spacer></v-spacer>
-          <v-btn class="mt-n10" fab depressed small v-on:click="showPlaceOrder = !showPlaceOrder">
-            <v-icon>mdi-close-circle</v-icon>
+  <v-dialog fullscreen v-model="showPlaceOrder">
+    <v-card class="grey lighten-4">
+      <v-card-title class="headline">
+        Place order
+        <v-spacer></v-spacer>
+        <v-btn class="mt-n5 mr-n5" fab depressed small v-on:click="showPlaceOrder = !showPlaceOrder">
+          <v-icon>mdi-close-circle</v-icon>
+        </v-btn>
+      </v-card-title>
+
+      <v-card-text class="">
+        <!-- <div class="title is-5 has-text-left">
+          <p>{{ printTray.length }} files will be printed.</p>
+        </div> -->
+        <div class="">
+          <div class="caption grey--text">Shop:</div>
+          <v-btn depressed block left color="grey lighten-2 purple--text" style="white-space: normal; align-items: left;" @click="openShopDialog()">
+            <div class="" style="white-space: normal; align-items: left;">
+              <p class="mb-n1">{{ shop.name }}</p>
+              <p class="caption">{{ shop.address }}</p>
+            </div>
           </v-btn>
         </div>
-        <!-- <br> -->
-        <div class="title is-5 has-text-left">
-          <p>{{ printTray.length }} files will be printed.</p>
-
-          <p></p>
-        </div>
         <br>
+        <v-simple-table dense fixed-header height="150" class="mx-n3 pb-3 grey lighten-4">
+          <template v-slot:default>
+            <thead class="grey lighten-4">
+              <tr>
+                <th class="text-left">Name</th>
+                <th class="text-left">Amount</th>
+                <th class="text-left">Pages</th>
+                <th class="text-left">Side</th>
+                <th class="text-left">Copies</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="file in printTray" :key="file.id">
+                <td>{{ file.docname.slice(0,8) }}...</td>
+                <td>&#8377;{{ file.print_cost }}</td>
+                <td>{{ file.pages }}</td>
+                <td>{{ file.print_feature.slice(0,6) }}</td>
+                <td>{{ file.print_copies }}</td>
+              </tr>
+            </tbody>
+          </template>
+        </v-simple-table>
 
-        <!-- <v-text-field v-model="promo_code" label="Promo code" placeholder="SAVE10" filled></v-text-field> -->
 
-        <div class="column" v-if="promo_code">
+        <!-- <div class="column" v-if="promo_code">
           <div class="caption grey--text">Promo code:</div>
           <span>{{ promo_code }}</span>
-        </div>
+        </div> -->
 
-        <div class="is-size-6 column">
-          <div class="caption grey--text">Shop:</div>
-          <span>Shivam Xerox, opp. Civil department</span>
-        </div>
-        <br>
-        <div class="is-size-7 text-center">
-          <p class="ma-n1">Pay at the shop. No extra charges.</p>
-          <p class="red--text accent-3">Orders once placed cannot be cancelled.</p>
-        </div>
+
         <div class="">
-          <div class="level is-mobile">
-            <v-btn class="" x-large block dark color="red accent-2" v-on:click="placeOrder()">
-              <span class="">Place Order</span>
-            </v-btn>
-          </div>
-
+          <p class="headline">Total amount: <span class="green--text">&#8377;{{ printTrayCost }}</span></p>
         </div>
-      </div>
+      </v-card-text>
 
-
-    </div>
-  </div>
-
-  <div class="modal is-active" v-if="showPickUp">
-    <div class="modal-background"></div>
-    <div class="modal-content">
-      <div class="box">
-        <div class="level is-mobile">
-          <v-spacer></v-spacer>
-          <div class="title is-2 text-center">
-            <p class="">Pick Up</p>
-          </div>
-          <v-spacer></v-spacer>
-          <v-btn class="mt-n10" fab depressed small v-on:click="showPickUp = !showPickUp">
-            <v-icon>mdi-close-circle</v-icon>
-          </v-btn>
+      <v-footer fixed class="grey lighten-4">
+        <div class=" caption my-n4">
+          <p class="text-center mb-n2">Pay at the shop. No extra charges.</p>
+          <p class="text-center red--text accent-3">Orders once placed cannot be cancelled.</p>
         </div>
-        <!-- <br> -->
-        <div class="title is-5 has-text-left">
-          <p>{{ pickUpTray.length }} files are printed. Pick up these files?</p>
+        <!-- <v-card-actions> -->
+        <v-btn class="" x-large depressed block dark color="red accent-2" v-on:click="placeOrder()">
+          <span class="">Place Order</span>
+        </v-btn>
+        <!-- </v-card-actions> -->
+      </v-footer>
+    </v-card>
+  </v-dialog>
 
-          <p></p>
-        </div>
-        <br>
+  <v-dialog fullscreen v-model="showPickUp">
+    <v-card class="grey lighten-4">
+      <v-card-title class="headline">
+        Pickup order
+        <v-spacer></v-spacer>
+        <v-btn class="mt-n5 mr-n5" fab depressed small v-on:click="showPickUp = !showPickUp">
+          <v-icon>mdi-close-circle</v-icon>
+        </v-btn>
+      </v-card-title>
 
-        <div class="is-size-6 column">
-          <div class="caption grey--text">Shop:</div>
-          <span>Shivam Xerox, opp. Civil department</span>
-        </div>
-        <br>
-        <div class="is-size-7 text-center">
-          <p class="ma-n1">Pay at the shop. No extra charges.</p>
-          <p class="red--text accent-3">Orders once placed cannot be cancelled.</p>
-        </div>
+      <v-card-text class="">
         <div class="">
-          <div class="level is-mobile">
-            <v-btn class="" x-large block dark color="red accent-2" v-on:click="pickUpOrder()">
-              <span class="">Pick Up</span>
-            </v-btn>
+          <div class="caption grey--text">Shop:</div>
+          <div class="">
+            <div class="px-2 black--text">
+              <p class="title mb-n1">{{ shop.name }}</p>
+              <p class="caption">{{ shop.address }}</p>
+            </div>
           </div>
-
         </div>
-      </div>
+        <br>
+        <v-simple-table dense fixed-header height="150" class="mx-n3 pb-3 grey lighten-4">
+          <template v-slot:default>
+            <thead class="grey lighten-4">
+              <tr>
+                <th class="text-left">Name</th>
+                <th class="text-left">Amount</th>
+                <th class="text-left">Pages</th>
+                <th class="text-left">Side</th>
+                <th class="text-left">Copies</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="file in pickUpTray" :key="file.id">
+                <td>{{ file.docname.slice(0,8) }}...</td>
+                <td>&#8377;{{ file.print_cost }}</td>
+                <td>{{ file.pages }}</td>
+                <td>{{ file.print_feature.slice(0,6) }}</td>
+                <td>{{ file.print_copies }}</td>
+              </tr>
+            </tbody>
+          </template>
+        </v-simple-table>
+
+        <div class="">
+          <p class="headline">Total amount: <span class="green--text">&#8377;{{ pickUpTrayCost }}</span></p>
+        </div>
+      </v-card-text>
+
+      <v-footer fixed class="grey lighten-4">
+        <div class=" caption my-n4">
+          <p class="text-center mb-n2">Pay at the shop. No extra charges.</p>
+          <p class="text-center red--text accent-3">Orders once placed cannot be cancelled.</p>
+        </div>
+        <v-btn class="" x-large depressed block dark color="red accent-2" v-on:click="pickUpOrder()">
+          <span class="">pickup</span>
+        </v-btn>
+      </v-footer>
+    </v-card>
+  </v-dialog>
 
 
-    </div>
-  </div>
   <v-snackbar v-model="showSnackbar">
-      {{ textSanckbar }}
-      <v-btn color="pink" text @click="showSnackbar = false">
-        Ok
-      </v-btn>
-    </v-snackbar>
+    {{ textSanckbar }}
+    <v-btn color="pink" text @click="showSnackbar = false">
+      Ok
+    </v-btn>
+  </v-snackbar>
+
+  <v-dialog fullscreen v-model="showShopDialog">
+    <v-card class="grey lighten-2">
+      <v-card-title class="headline">
+        Select a Shop:
+        <v-spacer></v-spacer>
+        <v-btn color="green darken-1" text @click="showShopDialog = !showShopDialog">Close</v-btn>
+      </v-card-title>
+
+      <v-card-text>
+        <v-card class="mx-auto my-1" flat v-for="shop in shops" :key="shop.id">
+          <v-card-title class="">
+            {{ shop.name }}
+            <v-spacer></v-spacer>
+            <v-btn depressed fab small class="mx-1 blue--text" :href=shop.gmap_url target="_blank">
+              <v-icon>mdi-google-maps</v-icon>
+            </v-btn>
+            <v-btn depressed v-on:click="selectShop(shop.id)">Select</v-btn>
+          </v-card-title>
+          <v-card-subtitle>{{ shop.address }}</v-card-subtitle>
+          <v-card-text>
+            <v-row>
+              <v-col>
+                <div class="caption grey--text">Single Side</div>
+                <span>&#8377;{{ shop.price_ss }}/page</span>
+              </v-col>
+              <v-col>
+                <div class="caption grey--text">Double Side</div>
+                <span>&#8377;{{ shop.price_ds }}/page</span>
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </v-card>
+      </v-card-text>
+
+      <v-card-actions></v-card-actions>
+    </v-card>
+  </v-dialog>
 </div>
 </template>
 
@@ -230,6 +307,7 @@ export default {
       files: [],
       printTray: [],
       pickUpTray: [],
+      shops: [],
       showNav: true,
       action_button_text: "Print Files",
       active_tab: "my_print_tray",
@@ -240,6 +318,13 @@ export default {
       print_feature_items: ["Single side", "Both side"],
       promo_code: '',
       textSanckbar: '',
+      shopId: 0,
+      showShopDialog: false,
+      shopName: 'select shop',
+      shop: {},
+      printTrayCost: 0,
+      pickUpTrayCost: 0,
+
     }
   },
 
@@ -362,6 +447,35 @@ export default {
       this.$store.dispatch('urlanalyticsTrigger', 'add file')
     },
 
+    selectShop(shopId) {
+      var shop = this.shops.find(shop => shop.id == shopId);
+      // console.log(this.shops);
+      this.shopName = shop.name;
+      this.showShopDialog = false;
+      this.$store.dispatch('updateShopId', shop);
+      this.actionButton();
+
+      // TODO: Select shop dialog closes after this. it shouldnt
+    },
+
+    openShopDialog() {
+      this.showShopDialog = true;
+
+      axiosBase.get('/file2/shops/', {
+          headers: {
+            'Authorization': "bearer " + this.$store.state.accessToken
+          },
+        }).then(response => this.shops = response.data)
+        .catch(err => {
+          if (err.response.status === 401) {
+            this.$router.push({
+              name: 'logout'
+            })
+          }
+        });
+      // console.log(this.shops);
+    },
+
     placeOrder() {
       this.$store.dispatch('urlanalyticsTrigger', 'order placed')
       axiosBase.put('/file2/files/printmytray', {
@@ -400,25 +514,72 @@ export default {
             })
           }
         });
-        
-        this.showPickUp = false;
+
+      this.showPickUp = false;
     },
 
     actionButton() {
 
       if (this.active_tab === 'my_print_tray') {
 
-        let printTray = this.files.filter(function(file) {
-          return file.printJobStatus == 0;
-        })
-        this.printTray = printTray;
+        var shopId = this.$store.getters.getShopId;
+        var shop;
 
-        if (printTray.length > 0) {
-          this.showPlaceOrder = true;
+        if (!shopId) {
+          this.openShopDialog();
         } else {
-          this.textSanckbar = "Add file is empty.";
-          this.showSnackbar = true;
+          let printTray = this.files.filter(function(file) {
+            return file.printJobStatus == 0;
+          })
+
+          axiosBase.get('/file2/shops/' + shopId)
+            .then(response => {
+              // console.log(response);
+              shop = response.data;
+              this.shop = shop;
+              this.shopName = shop.name;
+
+              var total = 0;
+
+              for (var i = 0; i < printTray.length; i++) {
+                printTray[i].shop = this.shop['user_id_2'];
+
+                // var side = 0;
+                var cost = 0;
+                if (printTray[i].print_feature == "SINGLESIDE") {
+                  // side = 1;
+                  cost = this.shop['price_ss'];
+                } else if (printTray[i].print_feature == "DOUBLESIDE") {
+                  if (printTray[i].pages > 1) {
+                    // side = 2;
+                    cost = this.shop['price_ds'];
+                  } else {
+                    // side = 1;
+                    cost = this.shop['price_ss'];
+                  }
+                }
+
+                printTray[i].print_cost = Math.ceil(printTray[i].pages * cost) * printTray[i].print_copies;
+
+                total += printTray[i].print_cost;
+              }
+              this.printTrayCost = total;
+              this.printTray = printTray;
+            })
+            .catch(err => {
+              console.log(err);
+              this.$store.dispatch('clearShopId');
+            });
+
+
+          if (printTray.length > 0) {
+            this.showPlaceOrder = true;
+          } else {
+            this.textSanckbar = "Add a file to print.";
+            this.showSnackbar = true;
+          }
         }
+
         // console.log('send print tray')
 
         this.$store.dispatch('urlanalyticsTrigger', 'print files')
@@ -428,12 +589,30 @@ export default {
 
         this.$store.dispatch('urlanalyticsTrigger', 'here to pickup')
 
+
         let pickUp = this.files.filter(function(file) {
           return file.printJobStatus == 2;
         })
         this.pickUpTray = pickUp;
 
         if (pickUp.length > 0) {
+          shopId = this.$store.getters.getShopId;
+
+          if (shopId) {
+            axiosBase.get('/file2/shops/' + shopId)
+              .then(response => {
+                // console.log(response);
+                shop = response.data;
+                this.shop = shop;
+                this.shopName = shop.name;
+              });
+          }
+
+          var total = 0;
+          for (var i = 0; i < pickUp.length; i++) {
+            total += pickUp[i].print_cost;
+          }
+          this.pickUpTrayCost = total;
           this.showPickUp = true;
         } else {
           this.textSanckbar = "No file ready for pick up. ";

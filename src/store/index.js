@@ -15,6 +15,8 @@ export default new Vuex.Store({
     tempUserId: localStorage.getItem('temp_user_id') || null,
     studentProfile: localStorage.getItem('student_profile') || null,
     promoCode: localStorage.getItem('promo_code') || null,
+    shopId: localStorage.getItem('shop_id') || null,
+    shop: {}
   },
 
   getters: {
@@ -28,6 +30,14 @@ export default new Vuex.Store({
 
     getPromoCode(state) {
       return state.promoCode;
+    },
+
+    getShopId(state) {
+      return state.shopId;
+    },
+
+    getShop(state) {
+      return state.shop;
     }
   },
 
@@ -60,7 +70,19 @@ export default new Vuex.Store({
     setPromoCode(state, promoCode) {
       localStorage.setItem('promo_code', promoCode);
       state.promoCode = promoCode;
-    }
+    },
+
+    setShopId(state, shop) {
+      localStorage.setItem('shop_id', shop.id);
+      state.shopId = shop.id;
+      state.shop = shop;
+    },
+
+    destroyShopId(state) {
+      localStorage.removeItem('shop_id');
+      state.shopId = null;
+      state.shop = null;
+    },
   },
 
   actions: {
@@ -179,6 +201,13 @@ export default new Vuex.Store({
 
     },
 
+    updateShopId(context, shop) {
+      context.commit('setShopId', shop)
+    },
+
+    clearShopId(context) {
+      context.commit('destroyShopId');
+    }
   },
 
   modules: {}
