@@ -1,2 +1,4 @@
+update app.yaml
+manually change manifest file
 npm run build
 gcloud app deploy

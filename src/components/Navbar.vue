@@ -71,7 +71,7 @@
           <v-card-title class="">
             {{ shop.name }}
             <v-spacer></v-spacer>
-            <v-btn depressed fab small class="mx-1 blue--text" :href=shop.gmap_url target="_blank">
+            <v-btn depressed fab small class="mx-1 blue--text" :href=shop.gmap_url target="_blank" v-on:click="openMap()">
               <v-icon>mdi-google-maps</v-icon>
             </v-btn>
             <v-btn class="grey lighten-2 purple--text" depressed v-on:click="selectShop(shop.id)">Select</v-btn>
@@ -134,7 +134,13 @@ export default {
   },
 
   methods: {
+    openMap() {
+      // alert("no!");
+      this.$store.dispatch('urlanalyticsTrigger', 'navbar->open map')
+    },
+
     selectShop(shopId) {
+      this.$store.dispatch('urlanalyticsTrigger', 'navbar->shop selected')
       var shop = this.shops.find(shop => shop.id == shopId);
       // console.log(this.shops);
       this.shopName = shop.name;
@@ -143,6 +149,8 @@ export default {
     },
 
     openShopDialog() {
+
+      this.$store.dispatch('urlanalyticsTrigger', 'vanbar->shop dialog')
       this.showShopDialog = true;
 
       axiosBase.get('/file2/shops/', {

@@ -16,7 +16,7 @@ export default new Vuex.Store({
     studentProfile: localStorage.getItem('student_profile') || null,
     promoCode: localStorage.getItem('promo_code') || null,
     shopId: localStorage.getItem('shop_id') || null,
-    shop: {}
+    shop: null
   },
 
   getters: {
@@ -148,8 +148,16 @@ export default new Vuex.Store({
 
     urlanalyticsTrigger(context, payload) {
       // console.log(payload.data);
-      var tempUserId = this.state.tempUserId
-
+      // var tempUserId = this.state.tempUserId
+      var tempUserId;
+      if (this.state.tempUserId == null) {
+        // console.log("new tui");
+        tempUserId = Math.floor((Math.random() * 10000) + 1);
+        context.commit('setTempUserId', tempUserId)
+      } else {
+        // console.log("old tui");
+        tempUserId = this.state.tempUserId
+      }
       if(this.getters.loggedIn) {
         axiosBase.post('file2/urlanalytics/trigger', {
           data: payload,

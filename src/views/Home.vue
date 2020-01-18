@@ -258,7 +258,7 @@
           <v-card-title class="">
             {{ shop.name }}
             <v-spacer></v-spacer>
-            <v-btn depressed fab small class="mx-1 blue--text" :href=shop.gmap_url target="_blank">
+            <v-btn depressed fab small class="mx-1 blue--text" :href=shop.gmap_url target="_blank" v-on:click="openMap()">
               <v-icon>mdi-google-maps</v-icon>
             </v-btn>
             <v-btn depressed v-on:click="selectShop(shop.id)">Select</v-btn>
@@ -346,6 +346,10 @@ export default {
   },
 
   methods: {
+    openMap() {
+      this.$store.dispatch('urlanalyticsTrigger', 'navbar->open map')
+    },
+
     setPropPromoCode() {
       this.promo_code = this.$store.getters.getPromoCode;
     },
@@ -448,6 +452,7 @@ export default {
     },
 
     selectShop(shopId) {
+      this.$store.dispatch('urlanalyticsTrigger', 'shop selected')
       var shop = this.shops.find(shop => shop.id == shopId);
       // console.log(this.shops);
       this.shopName = shop.name;
@@ -459,6 +464,8 @@ export default {
     },
 
     openShopDialog() {
+      this.$store.dispatch('urlanalyticsTrigger', 'shop dialog')
+
       this.showShopDialog = true;
 
       axiosBase.get('/file2/shops/', {
@@ -526,6 +533,7 @@ export default {
         var shop;
 
         if (!shopId) {
+          this.$store.dispatch('urlanalyticsTrigger', 'print->openShopDialog')
           this.openShopDialog();
         } else {
           let printTray = this.files.filter(function(file) {
