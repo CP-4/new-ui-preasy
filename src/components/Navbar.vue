@@ -30,7 +30,7 @@
             <v-list-item-title>File Bucket</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item link to="landing" v-if="!this.$store.getters.loggedIn">
+        <v-list-item link to="welcome" v-if="!this.$store.getters.loggedIn">
           <v-list-item-action>
             <v-icon>mdi-home</v-icon>
           </v-list-item-action>

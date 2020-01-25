@@ -16,6 +16,11 @@ const routes = [
     component: require('@/views/Landing').default
   },
   {
+    path: '/welcome',
+    name: 'welcome',
+    component: require('@/views/Welcome').default
+  },
+  {
      path: '/promo/:promoCode',
      name: 'promo',
      component: require('@/components/Promo').default
