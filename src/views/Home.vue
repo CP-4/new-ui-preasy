@@ -74,6 +74,10 @@
       <v-divider></v-divider>
     </v-card>
 
+    <v-sheet class="px-3 pt-3 pb-3" v-if="showFileLoading">
+      <v-skeleton-loader type="list-item-three-line" class="mx-auto"></v-skeleton-loader>
+    </v-sheet>
+
     <div class="text-center">
       <input id="fileupload" type="file" ref="file" style="display: none" v-on:change="addFile()" />
       <v-btn bottom rounded class="ma-5" dark color="purple" @click="$refs.file.click()" v-if="active_tab === 'my_print_tray'">
@@ -314,6 +318,7 @@ export default {
       showPlaceOrder: false,
       showPickUp: false,
       showSnackbar: false,
+      showFileLoading: false,
       v_tabs: 0,
       print_feature_items: ["Single side", "Both side"],
       promo_code: '',
@@ -425,7 +430,10 @@ export default {
       let docfile = this.$refs.file.files[0];
       // let doctype = getFileExtention(docfile);
 
+
       if (this.checkFile(docfile)) {
+        this.showFileLoading = true;
+
         let formData = new FormData();
         formData.append('docfile', docfile);
         // formData.append('doctype', doctype);
@@ -436,10 +444,14 @@ export default {
               'Content-Type': 'multipart/form-data'
             }
           })
-          .then(() => this.getFiles())
+          .then(() => {
+            this.showFileLoading = false;
+            this.getFiles();
+          })
           .catch(err => {
             // alert(err.response.status)
             // console.log(err);
+            this.showFileLoading = false;
             if (err.response.status === 401) {
               this.$router.push({
                 name: 'logout'
@@ -623,7 +635,7 @@ export default {
           this.pickUpTrayCost = total;
           this.showPickUp = true;
         } else {
-          this.textSanckbar = "No file ready for pick up. ";
+          this.textSanckbar = "Files not ready for pick up. ";
           this.showSnackbar = true;
         }
 

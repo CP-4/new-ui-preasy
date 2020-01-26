@@ -2,26 +2,69 @@
   <div class="">
     <v-container class="">
 
-      <div class="">
-        <div class="text-center">
+      <div class="text-center">
+        <div class="">
           <div class="headline">
             Skip the queue and get your printouts first.
           </div>
-          <div class=" text-center mt-4 title condensed grey--text text--darken-2 font-weight-light">
-            <span>Use <span class="text-uppercase grey--text">
-              <span class="headline font-weight-light">pr</span>
-              <span class="headline">easy</span>
-            </span> to print online.</span>
-          </div>
         </div>
 
-        <div class="subtitle-1 grey--text text--darken-4 text-center mt-4">
+        <v-btn bottom rounded depressed class="ma-5" dark color="grey" @click="urlanalyticsTrigger('vvn btn clk')">
+          <v-icon dark left>mdi-map-marker</v-icon>
+          Vidhyanagar, Anand
+        </v-btn>
+
+        <!-- <div class="subtitle-1 grey--text text--darken-4 text-center mt-4">
           <p>Now available in <span class="font-weight-bold">Vidhyanagar</span> across Motabazar, Nanabazar, Bakrol and more.</p>
-        </div>
+        </div> -->
       </div>
 
+      <div class=" text-center mt-4 headline condensed grey--text ">
+        <span>Sign up to print online and skip the queue.</span>
+      </div>
+
+      <div class="">
+        <v-container class="">
+          <div class="">
+            <v-text-field v-model="student_name" label="Full Name" outlined dense required color="green accent-4"
+            hint="Used to identify you at the shop." :rules="rules.required"></v-text-field>
+            <v-text-field v-model="phone" label="Mobile Number" outlined dense required color="green accent-4"
+            hint="" :rules="rules.required" type="number"></v-text-field>
+            <v-text-field v-model="email" label="Email" outlined dense required color="green accent-4"
+            :rules="rules.required"></v-text-field>
+            <v-text-field v-model="password" label="Password" outlined dense required color="green accent-4"
+            :rules="rules.required" type="password"></v-text-field>
+          </div>
+          <div class="text-center mt-n4">
+            <p class="grey--text"></p>
+            <v-btn class="green accent-4" large block rounded dark @click="registerUser">Sign up</v-btn>
+            <br>
+            <div class="text-center mt-n4">
+              <v-row align="center">
+                <v-col class="text-center" cols="12">
+                  <span class="overline grey--text text--darken-2">Already have an account?</span>
+                  <v-btn class="green--text text--accent-4" text rounded to="login">Log in</v-btn>
+                </v-col>
+              </v-row>
+
+            </div>
+          </div>
+
+        </v-container>
+      </div>
+
+      <!-- <div class="text-center pa-4">
+        <p class="overline grey--text text--darken-2">Create account</p>
+        <v-btn class="green accent-4 mt-n3" large block rounded dark to="register">Try now!</v-btn>
+      </div> -->
+
+
+
+    </v-container>
+
+    <v-container class="grey lighten-4 ">
       <div class="pt-6">
-        <v-card>
+        <v-card flat>
           <v-card-title class="headline">How it works!</v-card-title>
           <v-card-text>
             <div class="">
@@ -42,18 +85,10 @@
         </v-card>
       </div>
 
-      <div class="text-center pa-4">
-        <p class="overline grey--text text--darken-2">Create account</p>
-        <v-btn class="green accent-4 mt-n3" large block rounded dark to="register">Try now!</v-btn>
-      </div>
-
-    </v-container>
-
-    <v-container class="black white--text">
-      <div class="headline font-weight-light">
+      <div class="headline font-weight-regular mt-4">
         What our customers say:
       </div>
-      <div class="subtitle-1 white--text text-center text-justify px-5 mt-6 font-weight-light">
+      <div class="subtitle-1 text-center text-justify px-5 mt-6 font-weight-regular">
         <p><span class="font-weight-bold green--text text--accent-3">300+ students</span> and working professionals in Vidhyanagar use PREASY everyday to skip the queue, save time and get hassle free printouts.</p>
       </div>
 
@@ -69,7 +104,7 @@
       </v-carousel>
       <br><br><br>
       <div class="text-right">
-        <span class="font-weight-thin subtitle-1 white--text">think print think </span>
+        <span class="font-weight-light subtitle-1 grey--text text--darken-2">think print think </span>
         <span class="text-uppercase grey--text">
           <span class="subtitle-1 font-weight-light">pr</span>
           <span class="subtitle-1">easy</span>
@@ -98,6 +133,15 @@ export default {
           'Sharing documents on Email and Whatsapp is not safe at all. Preasy is very secure and documents are not shared or stored at shops. - Parshva Oza',
           'I dont like giving my personal number at shops. Preasy\'s strict privacy policy keeps my personal information and files secure. - Aditi Shah',
         ],
+        student_name: '',
+        password: '',
+        email: '',
+        phone: '',
+        wrongCred: false, // activates appropriate message if set to true
+        rules: {
+          required: [val => (val || '').length > 0 || 'This field is required'],
+
+        },
     }
   },
 
@@ -110,6 +154,25 @@ export default {
     urlanalyticsTrigger(data) {
       this.$store.dispatch('urlanalyticsTrigger', data);
     },
+
+    registerUser() { // call registerUser action
+      this.$store.dispatch('registerUser', {
+          student_name: this.student_name,
+          email: this.email,
+          phone: this.phone,
+          password: this.password
+        })
+        .then(() => {
+          this.wrongCred = false
+          this.$router.push({
+            name: 'home'
+          })
+        })
+        .catch(err => {
+          console.log(err);
+          this.wrongCred = true // if the credentials were wrong set wrongCred to true
+        })
+    }
   }
 
 }
