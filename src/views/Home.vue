@@ -80,7 +80,7 @@
 
     <div class="text-center">
       <input id="fileupload" type="file" ref="file" style="display: none" v-on:change="addFile()" />
-      <v-btn bottom rounded class="ma-5" dark color="purple" @click="$refs.file.click()" v-if="active_tab === 'my_print_tray'">
+      <v-btn bottom rounded class="ma-5" dark color="purple" @click="triggerAddFile()" v-if="active_tab === 'my_print_tray'">
         <v-icon dark>mdi-plus</v-icon>
         Add file
       </v-btn>
@@ -461,6 +461,11 @@ export default {
         document.getElementById('fileupload').value = "";
       }
       this.$store.dispatch('urlanalyticsTrigger', 'add file')
+    },
+
+    triggerAddFile() {
+      this.$refs.file.click();
+      this.$store.dispatch('urlanalyticsTrigger', 'trigger add file')
     },
 
     selectShop(shopId) {
